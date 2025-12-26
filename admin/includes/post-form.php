@@ -15,7 +15,7 @@ include __DIR__ . '/admin-header.php';
             <i class="fas fa-<?= $post ? 'edit' : 'plus' ?>"></i>
             <?= $post ? 'Редагування поста' : 'Новий пост' ?>
         </h1>
-        <a href="/admin/posts" class="btn">
+        <a href="<?= siteUrl('admin/posts') ?>" class="btn">
             <i class="fas fa-arrow-left"></i> Назад до списку
         </a>
     </div>

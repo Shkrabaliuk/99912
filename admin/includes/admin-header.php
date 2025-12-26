@@ -15,6 +15,12 @@ $pending_count = getPendingCommentsCount();
     <link rel="stylesheet" href="<?= assetUrl('css/normalize.css') ?>">
     <link rel="stylesheet" href="<?= assetUrl('css/admin.css') ?>">
     <link rel="stylesheet" href="<?= assetUrl('libs/font-awesome/css/all.min.css') ?>">
+    <script>
+        // Глобальна конфігурація для JavaScript
+        window.CMS_CONFIG = {
+            siteUrl: '<?= addslashes(SITE_URL) ?>'
+        };
+    </script>
 </head>
 <body class="admin-body">
     <nav class="admin-sidebar">
@@ -25,28 +31,28 @@ $pending_count = getPendingCommentsCount();
         
         <ul class="admin-menu">
             <li>
-                <a href="/admin" class="<?= str_contains($current_page, '/admin') && !str_contains($current_page, '/admin/posts') && !str_contains($current_page, '/admin/pages') && !str_contains($current_page, '/admin/comments') && !str_contains($current_page, '/admin/settings') ? 'active' : '' ?>">
+                <a href="<?= siteUrl('admin') ?>" class="<?= str_contains($current_page, '/admin') && !str_contains($current_page, '/admin/posts') && !str_contains($current_page, '/admin/pages') && !str_contains($current_page, '/admin/comments') && !str_contains($current_page, '/admin/settings') ? 'active' : '' ?>">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Панель управління</span>
                 </a>
             </li>
             
             <li>
-                <a href="/admin/posts" class="<?= str_contains($current_page, '/admin/posts') ? 'active' : '' ?>">
+                <a href="<?= siteUrl('admin/posts') ?>" class="<?= str_contains($current_page, '/admin/posts') ? 'active' : '' ?>">
                     <i class="fas fa-file-alt"></i>
                     <span>Пости</span>
                 </a>
             </li>
             
             <li>
-                <a href="/admin/pages" class="<?= str_contains($current_page, '/admin/pages') ? 'active' : '' ?>">
+                <a href="<?= siteUrl('admin/pages') ?>" class="<?= str_contains($current_page, '/admin/pages') ? 'active' : '' ?>">
                     <i class="fas fa-file"></i>
                     <span>Сторінки</span>
                 </a>
             </li>
             
             <li>
-                <a href="/admin/comments" class="<?= str_contains($current_page, '/admin/comments') ? 'active' : '' ?>">
+                <a href="<?= siteUrl('admin/comments') ?>" class="<?= str_contains($current_page, '/admin/comments') ? 'active' : '' ?>">
                     <i class="fas fa-comments"></i>
                     <span>Коментарі</span>
                     <?php if ($pending_count > 0): ?>
@@ -58,7 +64,7 @@ $pending_count = getPendingCommentsCount();
             <li class="menu-separator"></li>
             
             <li>
-                <a href="/admin/settings" class="<?= str_contains($current_page, '/admin/settings') ? 'active' : '' ?>">
+                <a href="<?= siteUrl('admin/settings') ?>" class="<?= str_contains($current_page, '/admin/settings') ? 'active' : '' ?>">
                     <i class="fas fa-cog"></i>
                     <span>Налаштування</span>
                 </a>
@@ -72,7 +78,7 @@ $pending_count = getPendingCommentsCount();
             </li>
             
             <li>
-                <a href="/admin/logout" class="logout-link">
+                <a href="<?= siteUrl('admin/logout') ?>" class="logout-link">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Вийти</span>
                 </a>

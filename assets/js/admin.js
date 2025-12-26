@@ -311,7 +311,7 @@ function clearCache() {
         return;
     }
     
-    fetch('/admin/clear-cache.php', {
+    fetch(window.CMS_CONFIG.siteUrl + '/admin/clear-cache.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
