@@ -134,7 +134,7 @@ if ($step === 4) {
         }
 
         // Визначення базового URL з урахуванням піддиректорії
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'];
         
         // Визначаємо базовий шлях: беремо поточний REQUEST_URI, видаляємо /install/...
