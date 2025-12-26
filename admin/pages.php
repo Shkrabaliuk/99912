@@ -25,14 +25,25 @@ if ($action === 'edit' || $action === 'new') {
             'status' => post('status', 'published')
         ];
         
-        if ($page) {
-            updatePage($page_id, $data);
-            Session::flash('success', 'Сторінку оновлено');
-            redirect('/admin/pages?action=edit&id=' . $page_id);
-        } else {
-            $new_id = createPage($data);
-            Session::flash('success', 'Сторінку створено');
-            redirect('/admin/pages?action=edit&id=' . $new_id);
+        try {
+            if ($page) {
+                updatePage($page_id, $data);
+                Session::flash('success', 'Сторінку оновлено');
+                redirect('/admin/pages?action=edit&id=' . $page_id);
+            } else {
+                $new_id = createPage($data);
+                Session::flash('success', 'Сторінку створено');
+                redirect('/admin/pages?action=edit&id=' . $new_id);
+            }
+        } catch (ValidationException $e) {
+            $errors = $e->getErrors();
+            $errorMessage = '';
+            foreach ($errors as $field => $fieldErrors) {
+                $errorMessage .= implode(', ', $fieldErrors) . '; ';
+            }
+            Session::flash('error', trim($errorMessage, '; '));
+        } catch (DatabaseException $e) {
+            Session::flash('error', 'Помилка бази даних. Спробуйте ще раз.');
         }
     }
     

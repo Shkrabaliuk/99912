@@ -11,6 +11,7 @@ if (isPost()) {
     // Rate limiting
     $ip = Security::getClientIP();
     if (!Security::checkLoginAttempts($ip)) {
+        Logger::warning('Login blocked due to too many attempts', ['ip' => $ip]);
         $error = 'Забагато спроб входу. Спробуйте пізніше.';
     } else {
         $settings = getSiteSettings();
@@ -19,9 +20,11 @@ if (isPost()) {
         if (Security::verifyPassword($password, $admin_password)) {
             Security::clearLoginAttempts($ip);
             Session::loginAdmin();
+            Logger::info('Admin login successful', ['ip' => $ip]);
             redirect('/admin');
         } else {
             Security::recordLoginAttempt($ip);
+            Logger::warning('Failed login attempt', ['ip' => $ip]);
             $error = 'Невірний пароль';
         }
     }

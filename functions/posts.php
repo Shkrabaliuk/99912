@@ -24,25 +24,51 @@ function getPostById($id) {
 }
 
 function createPost($data) {
+    // Validate input
+    $validator = Validator::validatePost($data);
+    if ($validator->fails()) {
+        throw new ValidationException($validator->getErrors());
+    }
+    
     $db = Database::getInstance();
     $slug = generateUniqueSlug($data['title'], 'posts');
     $published_at = $data['status'] === 'published' ? date('Y-m-d H:i:s') : null;
-    $db->execute(
-        "INSERT INTO posts (title, slug, content, excerpt, status, published_at) VALUES (?, ?, ?, ?, ?, ?)",
-        [$data['title'], $slug, $data['content'], $data['excerpt'] ?? '', $data['status'], $published_at]
-    );
-    $post_id = $db->lastInsertId();
-    if (!empty($data['tags'])) {
-        attachTagsToPost($post_id, $data['tags']);
+    
+    try {
+        $db->execute(
+            "INSERT INTO posts (title, slug, content, excerpt, status, published_at) VALUES (?, ?, ?, ?, ?, ?)",
+            [$data['title'], $slug, $data['content'], $data['excerpt'] ?? '', $data['status'], $published_at]
+        );
+        $post_id = $db->lastInsertId();
+        
+        if (!empty($data['tags'])) {
+            attachTagsToPost($post_id, $data['tags']);
+        }
+        
+        Cache::clear();
+        Logger::info('Post created', ['post_id' => $post_id, 'title' => $data['title']]);
+        
+        return $post_id;
+    } catch (DatabaseException $e) {
+        Logger::error('Failed to create post', ['error' => $e->getMessage(), 'data' => $data]);
+        throw $e;
     }
-    Cache::clear();
-    return $post_id;
 }
 
 function updatePost($id, $data) {
+    // Validate input
+    $validator = Validator::validatePost($data);
+    if ($validator->fails()) {
+        throw new ValidationException($validator->getErrors());
+    }
+    
     $db = Database::getInstance();
     $post = getPostById($id);
-    if (!$post) return false;
+    if (!$post) {
+        Logger::warning('Attempted to update non-existent post', ['post_id' => $id]);
+        return false;
+    }
+    
     $slug = $post['slug'];
     if ($data['title'] !== $post['title']) {
         $slug = generateUniqueSlug($data['title'], 'posts', $id);
@@ -51,18 +77,28 @@ function updatePost($id, $data) {
     if ($data['status'] === 'published' && $post['status'] !== 'published') {
         $published_at = date('Y-m-d H:i:s');
     }
-    $db->execute(
-        "UPDATE posts SET title = ?, slug = ?, content = ?, excerpt = ?, status = ?, published_at = ?, updated_at = NOW() WHERE id = ?",
-        [$data['title'], $slug, $data['content'], $data['excerpt'] ?? '', $data['status'], $published_at, $id]
-    );
-    if (isset($data['tags'])) {
-        detachAllTagsFromPost($id);
-        if (!empty($data['tags'])) {
-            attachTagsToPost($id, $data['tags']);
+    
+    try {
+        $db->execute(
+            "UPDATE posts SET title = ?, slug = ?, content = ?, excerpt = ?, status = ?, published_at = ?, updated_at = NOW() WHERE id = ?",
+            [$data['title'], $slug, $data['content'], $data['excerpt'] ?? '', $data['status'], $published_at, $id]
+        );
+        
+        if (isset($data['tags'])) {
+            detachAllTagsFromPost($id);
+            if (!empty($data['tags'])) {
+                attachTagsToPost($id, $data['tags']);
+            }
         }
+        
+        Cache::clear();
+        Logger::info('Post updated', ['post_id' => $id, 'title' => $data['title']]);
+        
+        return true;
+    } catch (DatabaseException $e) {
+        Logger::error('Failed to update post', ['error' => $e->getMessage(), 'post_id' => $id]);
+        throw $e;
     }
-    Cache::clear();
-    return true;
 }
 
 function deletePost($id) {
