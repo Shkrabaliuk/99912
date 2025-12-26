@@ -29,14 +29,25 @@ if ($action === 'edit' || $action === 'new') {
             'tags' => $tags_array
         ];
         
-        if ($post) {
-            updatePost($post_id, $data);
-            Session::flash('success', 'Пост оновлено');
-            redirect('/admin/posts?action=edit&id=' . $post_id);
-        } else {
-            $new_id = createPost($data);
-            Session::flash('success', 'Пост створено');
-            redirect('/admin/posts?action=edit&id=' . $new_id);
+        try {
+            if ($post) {
+                updatePost($post_id, $data);
+                Session::flash('success', 'Пост оновлено');
+                redirect('/admin/posts?action=edit&id=' . $post_id);
+            } else {
+                $new_id = createPost($data);
+                Session::flash('success', 'Пост створено');
+                redirect('/admin/posts?action=edit&id=' . $new_id);
+            }
+        } catch (ValidationException $e) {
+            $errors = $e->getErrors();
+            $errorMessage = '';
+            foreach ($errors as $field => $fieldErrors) {
+                $errorMessage .= implode(', ', $fieldErrors) . '; ';
+            }
+            Session::flash('error', trim($errorMessage, '; '));
+        } catch (DatabaseException $e) {
+            Session::flash('error', 'Помилка бази даних. Спробуйте ще раз.');
         }
     }
     

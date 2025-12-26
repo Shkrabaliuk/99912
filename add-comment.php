@@ -29,12 +29,18 @@ $data = [
     'content' => post('content')
 ];
 
-$result = addComment($post_id, $data);
-
-if ($result) {
-    Session::flash('comment_success', true);
-} else {
-    Session::flash('comment_error', 'Помилка додавання коментаря. Перевірте правильність заповнення форми.');
+try {
+    $result = addComment($post_id, $data);
+    
+    if ($result) {
+        Session::flash('comment_success', true);
+    } else {
+        Session::flash('comment_error', 'Помилка додавання коментаря. Перевірте правильність заповнення форми.');
+    }
+} catch (ValidationException $e) {
+    Session::flash('comment_error', $e->firstError());
+} catch (DatabaseException $e) {
+    Session::flash('comment_error', 'Помилка збереження коментаря. Спробуйте ще раз.');
 }
 
 redirect(siteUrl($post['slug']) . '#comments');

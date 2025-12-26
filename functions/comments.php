@@ -17,25 +17,54 @@ function getApprovedCommentsCount($post_id) {
 }
 
 function addComment($post_id, $data) {
+    // Validate input
+    $validator = Validator::validateComment($data);
+    if ($validator->fails()) {
+        throw new ValidationException($validator->getErrors());
+    }
+    
     $db = Database::getInstance();
-    if (empty($data['author_name']) || empty($data['author_email']) || empty($data['content'])) {
-        return false;
-    }
+    
     if (!Security::validateEmail($data['author_email'])) {
+        Logger::warning('Comment rejected: invalid email', ['email' => $data['author_email']]);
         return false;
     }
+    
     if (!Security::checkHoneypot()) {
+        Logger::warning('Comment rejected: honeypot triggered', [
+            'ip' => Security::getClientIP(),
+            'post_id' => $post_id
+        ]);
         return false;
     }
+    
     if (!Security::checkFormTiming()) {
+        Logger::warning('Comment rejected: form submitted too quickly', [
+            'ip' => Security::getClientIP(),
+            'post_id' => $post_id
+        ]);
         return false;
     }
-    $db->execute(
-        "INSERT INTO comments (post_id, author_name, author_email, content, status, ip_address, user_agent) VALUES (?, ?, ?, ?, 'pending', ?, ?)",
-        [$post_id, trim($data['author_name']), trim($data['author_email']), trim($data['content']), Security::getClientIP(), $_SERVER['HTTP_USER_AGENT'] ?? '']
-    );
-    Cache::clear();
-    return $db->lastInsertId();
+    
+    try {
+        $db->execute(
+            "INSERT INTO comments (post_id, author_name, author_email, content, status, ip_address, user_agent) VALUES (?, ?, ?, ?, 'pending', ?, ?)",
+            [$post_id, trim($data['author_name']), trim($data['author_email']), trim($data['content']), Security::getClientIP(), $_SERVER['HTTP_USER_AGENT'] ?? '']
+        );
+        
+        $comment_id = $db->lastInsertId();
+        Cache::clear();
+        Logger::info('Comment added', [
+            'comment_id' => $comment_id,
+            'post_id' => $post_id,
+            'author' => $data['author_name']
+        ]);
+        
+        return $comment_id;
+    } catch (DatabaseException $e) {
+        Logger::error('Failed to add comment', ['error' => $e->getMessage(), 'post_id' => $post_id]);
+        throw $e;
+    }
 }
 
 function approveComment($id) {

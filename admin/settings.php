@@ -4,27 +4,47 @@
  */
 
 if (isPost()) {
-    // Оновлення основних налаштувань
-    updateSetting('site_name', post('site_name'));
-    updateSetting('site_description', post('site_description'));
-    updateSetting('posts_per_page', post('posts_per_page'));
-    updateSetting('theme_color', post('theme_color'));
-    updateSetting('google_analytics', post('google_analytics'));
-    
-    // Зміна пароля
-    $new_password = post('new_password');
-    if (!empty($new_password)) {
-        if (strlen($new_password) < 8) {
-            Session::flash('error', 'Пароль має містити мінімум 8 символів');
-        } else {
+    try {
+        // Валідація даних
+        $data = [
+            'site_name' => post('site_name'),
+            'posts_per_page' => post('posts_per_page'),
+            'new_password' => post('new_password')
+        ];
+        
+        $validator = Validator::validateSettings($data);
+        if ($validator->fails()) {
+            throw new ValidationException($validator->getErrors());
+        }
+        
+        // Оновлення основних налаштувань
+        updateSetting('site_name', post('site_name'));
+        updateSetting('site_description', post('site_description'));
+        updateSetting('posts_per_page', post('posts_per_page'));
+        updateSetting('theme_color', post('theme_color'));
+        updateSetting('google_analytics', post('google_analytics'));
+        
+        // Зміна пароля
+        $new_password = post('new_password');
+        if (!empty($new_password)) {
             $hashed = Security::hashPassword($new_password);
             updateSetting('admin_password', $hashed);
             Session::flash('password_changed', true);
+            Logger::info('Admin password changed');
         }
-    }
-    
-    if (!Session::flash('error')) {
+        
         Session::flash('success', 'Налаштування успішно збережено');
+        Logger::info('Settings updated');
+        
+    } catch (ValidationException $e) {
+        $errors = $e->getErrors();
+        $errorMessage = '';
+        foreach ($errors as $field => $fieldErrors) {
+            $errorMessage .= implode(', ', $fieldErrors) . '; ';
+        }
+        Session::flash('error', trim($errorMessage, '; '));
+    } catch (DatabaseException $e) {
+        Session::flash('error', 'Помилка бази даних. Спробуйте ще раз.');
     }
     
     redirect('/admin/settings');
