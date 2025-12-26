@@ -133,13 +133,29 @@ if ($step === 4) {
             insertDemoContent($pdo);
         }
 
+        // Визначення базового URL з урахуванням піддиректорії
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        
+        // Визначаємо базовий шлях: беремо поточний REQUEST_URI, видаляємо /install/...
+        $request_uri = $_SERVER['REQUEST_URI'];
+        $base_path = '';
+        if (preg_match('#^(.*?)/install/#', $request_uri, $matches)) {
+            $base_path = $matches[1];
+        }
+        
+        // Очищення базового шляху від небезпечних символів
+        $base_path = preg_replace('#[^a-zA-Z0-9/_-]#', '', $base_path);
+        
+        $site_url = $protocol . '://' . $host . $base_path;
+        
         // Створення config.php
         $config_content = "<?php\n";
-        $config_content .= "define('DB_HOST', '{$db['host']}');\n";
-        $config_content .= "define('DB_NAME', '{$db['name']}');\n";
-        $config_content .= "define('DB_USER', '{$db['user']}');\n";
-        $config_content .= "define('DB_PASS', '{$db['pass']}');\n";
-        $config_content .= "define('SITE_URL', 'http://' . \$_SERVER['HTTP_HOST']);\n";
+        $config_content .= "define('DB_HOST', '" . addslashes($db['host']) . "');\n";
+        $config_content .= "define('DB_NAME', '" . addslashes($db['name']) . "');\n";
+        $config_content .= "define('DB_USER', '" . addslashes($db['user']) . "');\n";
+        $config_content .= "define('DB_PASS', '" . addslashes($db['pass']) . "');\n";
+        $config_content .= "define('SITE_URL', '" . addslashes($site_url) . "');\n";
         $config_content .= "define('CACHE_ENABLED', true);\n";
         $config_content .= "define('CACHE_TTL', 3600);\n";
 
