@@ -175,7 +175,7 @@ class Router {
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         
         if (empty($query)) {
-            header('Location: /');
+            header('Location: ' . siteUrl());
             exit;
         }
 
@@ -207,7 +207,7 @@ class Router {
         if (!Session::isAdmin()) {
             $admin_path = str_replace('/admin', '', $uri);
             if ($admin_path !== '/login' && $admin_path !== 'login') {
-                header('Location: /admin/login');
+                header('Location: ' . siteUrl('admin/login'));
                 exit;
             }
         }
