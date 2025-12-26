@@ -10,21 +10,21 @@ $comment_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if ($action === 'approve' && $comment_id) {
     approveComment($comment_id);
     Session::flash('success', 'Коментар схвалено');
-    redirect('/admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : ''));
+    redirect(siteUrl('admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : '')));
 }
 
 // Позначити як спам
 if ($action === 'spam' && $comment_id) {
     markAsSpam($comment_id);
     Session::flash('success', 'Коментар позначено як спам');
-    redirect('/admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : ''));
+    redirect(siteUrl('admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : '')));
 }
 
 // Видалення коментаря
 if ($action === 'delete' && $comment_id) {
     deleteComment($comment_id);
     Session::flash('success', 'Коментар видалено');
-    redirect('/admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : ''));
+    redirect(siteUrl('admin/comments' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : '')));
 }
 
 // Список коментарів

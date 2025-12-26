@@ -19,7 +19,7 @@ if (isPost()) {
         if (Security::verifyPassword($password, $admin_password)) {
             Security::clearLoginAttempts($ip);
             Session::loginAdmin();
-            redirect('/admin');
+            redirect(siteUrl('admin'));
         } else {
             Security::recordLoginAttempt($ip);
             $error = 'Невірний пароль';

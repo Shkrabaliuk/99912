@@ -27,7 +27,7 @@ if (isPost()) {
         Session::flash('success', 'Налаштування успішно збережено');
     }
     
-    redirect('/admin/settings');
+    redirect(siteUrl('admin/settings'));
 }
 
 $settings = getSiteSettings();

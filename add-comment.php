@@ -7,20 +7,20 @@
 require_once __DIR__ . '/index.php';
 
 if (!isPost()) {
-    redirect('/');
+    redirect(siteUrl());
 }
 
 // Перевірка CSRF
 if (!Security::verifyCSRFToken(post('csrf_token'))) {
     Session::flash('comment_error', 'Помилка безпеки. Спробуйте ще раз.');
-    redirect($_SERVER['HTTP_REFERER'] ?? '/');
+    redirect($_SERVER['HTTP_REFERER'] ?? siteUrl());
 }
 
 $post_id = (int)post('post_id');
 $post = getPostById($post_id);
 
 if (!$post || $post['status'] !== 'published') {
-    redirect('/');
+    redirect(siteUrl());
 }
 
 $data = [

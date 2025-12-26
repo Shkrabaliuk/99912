@@ -10,7 +10,7 @@ $post_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if ($action === 'delete' && $post_id) {
     deletePost($post_id);
     Session::flash('success', 'Пост успішно видалено');
-    redirect('/admin/posts');
+    redirect(siteUrl('admin/posts'));
 }
 
 // Редагування або створення
@@ -32,11 +32,11 @@ if ($action === 'edit' || $action === 'new') {
         if ($post) {
             updatePost($post_id, $data);
             Session::flash('success', 'Пост оновлено');
-            redirect('/admin/posts?action=edit&id=' . $post_id);
+            redirect(siteUrl('admin/posts?action=edit&id=' . $post_id));
         } else {
             $new_id = createPost($data);
             Session::flash('success', 'Пост створено');
-            redirect('/admin/posts?action=edit&id=' . $new_id);
+            redirect(siteUrl('admin/posts?action=edit&id=' . $new_id));
         }
     }
     

@@ -10,7 +10,7 @@ $page_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if ($action === 'delete' && $page_id) {
     deletePage($page_id);
     Session::flash('success', 'Сторінку видалено');
-    redirect('/admin/pages');
+    redirect(siteUrl('admin/pages'));
 }
 
 // Редагування або створення
@@ -28,11 +28,11 @@ if ($action === 'edit' || $action === 'new') {
         if ($page) {
             updatePage($page_id, $data);
             Session::flash('success', 'Сторінку оновлено');
-            redirect('/admin/pages?action=edit&id=' . $page_id);
+            redirect(siteUrl('admin/pages?action=edit&id=' . $page_id));
         } else {
             $new_id = createPage($data);
             Session::flash('success', 'Сторінку створено');
-            redirect('/admin/pages?action=edit&id=' . $new_id);
+            redirect(siteUrl('admin/pages?action=edit&id=' . $new_id));
         }
     }
     

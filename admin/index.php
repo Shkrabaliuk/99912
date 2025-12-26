@@ -16,7 +16,7 @@ if ($uri === 'login' || (!isset($_SESSION['admin_logged_in']) && $uri !== 'login
 // Логаут
 if ($uri === 'logout') {
     Session::logoutAdmin();
-    redirect('/admin/login');
+    redirect(siteUrl('admin/login'));
 }
 
 // Захист від CSRF для всіх POST-запитів
