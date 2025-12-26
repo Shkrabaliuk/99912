@@ -45,7 +45,7 @@ if ($action === 'edit' || $action === 'new') {
                 <i class="fas fa-<?= $page ? 'edit' : 'plus' ?>"></i>
                 <?= $page ? 'Редагування сторінки' : 'Нова сторінка' ?>
             </h1>
-            <a href="/admin/pages" class="btn">
+            <a href="<?= siteUrl('admin/pages') ?>" class="btn">
                 <i class="fas fa-arrow-left"></i> Назад
             </a>
         </div>
@@ -151,7 +151,7 @@ include __DIR__ . '/includes/admin-header.php';
 <div class="admin-container">
     <div class="admin-header">
         <h1><i class="fas fa-file"></i> Сторінки</h1>
-        <a href="/admin/pages?action=new" class="btn btn-primary">
+        <a href="<?= siteUrl('admin/pages?action=new') ?>" class="btn btn-primary">
             <i class="fas fa-plus"></i> Нова сторінка
         </a>
     </div>
@@ -168,7 +168,7 @@ include __DIR__ . '/includes/admin-header.php';
             <i class="fas fa-file"></i>
             <h3>Немає сторінок</h3>
             <p>Створіть першу статичну сторінку (Про мене, Контакти, тощо)</p>
-            <a href="/admin/pages?action=new" class="btn btn-primary">
+            <a href="<?= siteUrl('admin/pages?action=new') ?>" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Створити сторінку
             </a>
         </div>
@@ -199,7 +199,7 @@ include __DIR__ . '/includes/admin-header.php';
                         </td>
                         <td><?= formatDate($page['created_at']) ?></td>
                         <td class="table-actions">
-                            <a href="/admin/pages?action=edit&id=<?= $page['id'] ?>" class="action-link">
+                            <a href="<?= siteUrl('admin/pages?action=edit&id=' . $page['id']) ?>" class="action-link">
                                 <i class="fas fa-edit"></i> Редагувати
                             </a>
                             <?php if ($page['status'] === 'published'): ?>
@@ -207,7 +207,7 @@ include __DIR__ . '/includes/admin-header.php';
                                     <i class="fas fa-external-link-alt"></i> Переглянути
                                 </a>
                             <?php endif; ?>
-                            <a href="/admin/pages?action=delete&id=<?= $page['id'] ?>" 
+                            <a href="<?= siteUrl('admin/pages?action=delete&id=' . $page['id']) ?>" 
                                class="action-link action-danger" 
                                onclick="return confirm('Видалити цю сторінку?')">
                                 <i class="fas fa-trash"></i> Видалити

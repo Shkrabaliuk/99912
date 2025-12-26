@@ -45,16 +45,16 @@ include __DIR__ . '/includes/admin-header.php';
     <?php endif; ?>
     
     <div class="filter-tabs">
-        <a href="/admin/comments" class="<?= !$status_filter ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/comments') ?>" class="<?= !$status_filter ? 'active' : '' ?>">
             Всі (<?= getTotalComments() ?>)
         </a>
-        <a href="/admin/comments?status=pending" class="<?= $status_filter === 'pending' ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/comments?status=pending') ?>" class="<?= $status_filter === 'pending' ? 'active' : '' ?>">
             <i class="fas fa-clock"></i> Очікують (<?= getTotalComments('pending') ?>)
         </a>
-        <a href="/admin/comments?status=approved" class="<?= $status_filter === 'approved' ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/comments?status=approved') ?>" class="<?= $status_filter === 'approved' ? 'active' : '' ?>">
             <i class="fas fa-check"></i> Схвалені (<?= getTotalComments('approved') ?>)
         </a>
-        <a href="/admin/comments?status=spam" class="<?= $status_filter === 'spam' ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/comments?status=spam') ?>" class="<?= $status_filter === 'spam' ? 'active' : '' ?>">
             <i class="fas fa-ban"></i> Спам (<?= getTotalComments('spam') ?>)
         </a>
     </div>
@@ -120,20 +120,20 @@ include __DIR__ . '/includes/admin-header.php';
                     
                     <div class="comment-actions">
                         <?php if ($comment['status'] === 'pending'): ?>
-                            <a href="/admin/comments?action=approve&id=<?= $comment['id'] ?><?= $status_filter ? '&status=' . $status_filter : '' ?>" 
+                            <a href="<?= siteUrl('admin/comments?action=approve&id=' . $comment['id'] . ($status_filter ? '&status=' . $status_filter : '')) ?>" 
                                class="btn btn-success btn-sm">
                                 <i class="fas fa-check"></i> Схвалити
                             </a>
                         <?php endif; ?>
                         
                         <?php if ($comment['status'] !== 'spam'): ?>
-                            <a href="/admin/comments?action=spam&id=<?= $comment['id'] ?><?= $status_filter ? '&status=' . $status_filter : '' ?>" 
+                            <a href="<?= siteUrl('admin/comments?action=spam&id=' . $comment['id'] . ($status_filter ? '&status=' . $status_filter : '')) ?>" 
                                class="btn btn-sm">
                                 <i class="fas fa-ban"></i> Спам
                             </a>
                         <?php endif; ?>
                         
-                        <a href="/admin/comments?action=delete&id=<?= $comment['id'] ?><?= $status_filter ? '&status=' . $status_filter : '' ?>" 
+                        <a href="<?= siteUrl('admin/comments?action=delete&id=' . $comment['id'] . ($status_filter ? '&status=' . $status_filter : '')) ?>" 
                            class="btn btn-danger btn-sm" 
                            onclick="return confirm('Видалити цей коментар назавжди?')">
                             <i class="fas fa-trash"></i> Видалити

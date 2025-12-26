@@ -54,7 +54,7 @@ include __DIR__ . '/includes/admin-header.php';
 <div class="admin-container">
     <div class="admin-header">
         <h1><i class="fas fa-file-alt"></i> Пости</h1>
-        <a href="/admin/posts?action=new" class="btn btn-primary">
+        <a href="<?= siteUrl('admin/posts?action=new') ?>" class="btn btn-primary">
             <i class="fas fa-plus"></i> Новий пост
         </a>
     </div>
@@ -67,13 +67,13 @@ include __DIR__ . '/includes/admin-header.php';
     <?php endif; ?>
     
     <div class="filter-tabs">
-        <a href="/admin/posts" class="<?= !$status_filter ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/posts') ?>" class="<?= !$status_filter ? 'active' : '' ?>">
             Всі (<?= getTotalPosts() ?>)
         </a>
-        <a href="/admin/posts?status=published" class="<?= $status_filter === 'published' ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/posts?status=published') ?>" class="<?= $status_filter === 'published' ? 'active' : '' ?>">
             Опубліковано (<?= getTotalPosts('published') ?>)
         </a>
-        <a href="/admin/posts?status=draft" class="<?= $status_filter === 'draft' ? 'active' : '' ?>">
+        <a href="<?= siteUrl('admin/posts?status=draft') ?>" class="<?= $status_filter === 'draft' ? 'active' : '' ?>">
             Чернетки (<?= getTotalPosts('draft') ?>)
         </a>
     </div>
@@ -83,7 +83,7 @@ include __DIR__ . '/includes/admin-header.php';
             <i class="fas fa-inbox"></i>
             <h3>Немає постів</h3>
             <p>Створіть свій перший пост, щоб розпочати блогінг</p>
-            <a href="/admin/posts?action=new" class="btn btn-primary">
+            <a href="<?= siteUrl('admin/posts?action=new') ?>" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Створити пост
             </a>
         </div>
@@ -133,7 +133,7 @@ include __DIR__ . '/includes/admin-header.php';
                             </span>
                         </td>
                         <td class="table-actions">
-                            <a href="/admin/posts?action=edit&id=<?= $post['id'] ?>" class="action-link">
+                            <a href="<?= siteUrl('admin/posts?action=edit&id=' . $post['id']) ?>" class="action-link">
                                 <i class="fas fa-edit"></i> Редагувати
                             </a>
                             <?php if ($post['status'] === 'published'): ?>
@@ -141,7 +141,7 @@ include __DIR__ . '/includes/admin-header.php';
                                     <i class="fas fa-external-link-alt"></i> Переглянути
                                 </a>
                             <?php endif; ?>
-                            <a href="/admin/posts?action=delete&id=<?= $post['id'] ?>" 
+                            <a href="<?= siteUrl('admin/posts?action=delete&id=' . $post['id']) ?>" 
                                class="action-link action-danger" 
                                onclick="return confirm('Ви впевнені, що хочете видалити цей пост?')">
                                 <i class="fas fa-trash"></i> Видалити

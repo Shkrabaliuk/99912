@@ -50,7 +50,7 @@ include __DIR__ . '/includes/admin-header.php';
             <div class="stat-number"><?= $pending_comments ?></div>
             <div class="stat-label">Очікують модерації</div>
             <?php if ($pending_comments > 0): ?>
-                <a href="/admin/comments?status=pending" class="stat-action">Переглянути</a>
+                <a href="<?= siteUrl('admin/comments?status=pending') ?>" class="stat-action">Переглянути</a>
             <?php endif; ?>
         </div>
     </div>
@@ -79,7 +79,7 @@ include __DIR__ . '/includes/admin-header.php';
                 </ul>
             <?php endif; ?>
             
-            <a href="/admin/posts" class="section-footer-link">
+            <a href="<?= siteUrl('admin/posts') ?>" class="section-footer-link">
                 Всі пости <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -110,7 +110,7 @@ include __DIR__ . '/includes/admin-header.php';
                 </ul>
             <?php endif; ?>
             
-            <a href="/admin/comments" class="section-footer-link">
+            <a href="<?= siteUrl('admin/comments') ?>" class="section-footer-link">
                 Всі коментарі <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -119,19 +119,19 @@ include __DIR__ . '/includes/admin-header.php';
     <div class="quick-actions">
         <h2>Швидкі дії</h2>
         <div class="quick-actions-grid">
-            <a href="/admin/posts?action=new" class="quick-action-btn">
+            <a href="<?= siteUrl('admin/posts?action=new') ?>" class="quick-action-btn">
                 <i class="fas fa-plus-circle"></i>
                 <span>Новий пост</span>
             </a>
-            <a href="/admin/pages?action=new" class="quick-action-btn">
+            <a href="<?= siteUrl('admin/pages?action=new') ?>" class="quick-action-btn">
                 <i class="fas fa-file-medical"></i>
                 <span>Нова сторінка</span>
             </a>
-            <a href="/admin/comments" class="quick-action-btn">
+            <a href="<?= siteUrl('admin/comments') ?>" class="quick-action-btn">
                 <i class="fas fa-tasks"></i>
                 <span>Модерація</span>
             </a>
-            <a href="/admin/settings" class="quick-action-btn">
+            <a href="<?= siteUrl('admin/settings') ?>" class="quick-action-btn">
                 <i class="fas fa-cog"></i>
                 <span>Налаштування</span>
             </a>
