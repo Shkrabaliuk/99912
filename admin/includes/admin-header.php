@@ -18,7 +18,7 @@ $pending_count = getPendingCommentsCount();
     <script>
         // Глобальна конфігурація для JavaScript
         window.CMS_CONFIG = {
-            siteUrl: '<?= addslashes(SITE_URL) ?>'
+            siteUrl: <?= json_encode(SITE_URL, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
         };
     </script>
 </head>
